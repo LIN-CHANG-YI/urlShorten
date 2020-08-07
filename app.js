@@ -5,12 +5,13 @@ const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const randomLetter = require('./random.js')
 const URL = require('./models/url.js')
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost/URL'
 
-const PORT = 3000
+const PORT = process.env.PORT || 3000
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 app.use(bodyParser.urlencoded({ extended: true }))
-mongoose.connect('mongodb://localhost/URL', { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
 
 const db = mongoose.connection
 db.on('error', () => {
