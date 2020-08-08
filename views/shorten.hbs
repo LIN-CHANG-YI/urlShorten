@@ -1,9 +1,10 @@
 <div class="container">
   <div class="row justify-content-center">
-    <form action="/" class="col-8 mt-3">
+    <div class="col-8 mt-3">
       <h1>Success!Please use this link:</h1>
-      <a href={{ link }} style="display: block;">{{ url }}</a>
-      <button type="button" class="btn btn-primary mt-3">Copy</button>
-    </form>
+      <input id="copyUrl" class="form-control" value="{{ url }}" aria-label="url" aria-describedby="addon-wrapping"
+        readonly>
+      <button id="copy" data-clipboard-target="#copyUrl" class="btn btn-primary mt-3">Copy</button>
+    </div>
   </div>
 </div>
