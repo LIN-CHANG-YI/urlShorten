@@ -25,16 +25,45 @@ app.get('/', (req, res) => {
   res.render('index')
 })
 
-app.post('/url', (req, res) => {
+app.post('/', (req, res) => {
   const link = req.body.url
   const random = randomLetter()
-  URL.create({ url: `${req.body.url}/${random}` })
-    .then(() => {
-      const url = `${req.headers.origin}/${random}`
-      res.render('shorten', { url, link })
+  URL.find({ url: `${req.body.url}/${random}` })
+    .then(exist => {
+      //判斷是否有一樣組合的網址
+      if (exist.length === 1) {
+        res.redirect('/')
+      } else {
+        URL.create({ url: `${link}/${random}`, random: `${random}` })
+          .then(() => {
+            const url = `${req.headers.origin}/${random}`
+            res.render('shorten', { url, link })
+          })
+          .catch(error => console.log(error))
+      }
     })
     .catch(error => console.log(error))
 })
+
+// app.get('/:random', (req, res) => {
+//   const params = req.params.random
+//   URL.find({ random: `${params}` })
+//     .then((item) => res.redirect(`/${item.url}`))
+//     .catch(error => console.log(error))
+// })
+
+// app.post('/', (req, res) => {
+//   const link = req.body.url
+//   const random = randomLetter()
+//   URL.create({ url: `${req.body.url}/${random}` })
+//     .then(() => {
+//       const url = `${req.headers.origin}/${random}`
+//       res.render('shorten', { url, link })
+//     })
+//     .catch(error => console.log(error))
+// })
+
+
 
 app.listen(PORT, () => {
   console.log('Express is listen on port 3000.')
