@@ -27,24 +27,24 @@ app.get('/', (req, res) => {
 
 app.post('/getUrl', (req, res) => {
   const link = req.body.url
-  const random = randomLetter()
-  URL.findOne({ random: random })
-    .lean()
-    .then((exist) => {
-      //判斷是否有一樣亂數
-      if (exist) {
-        const error = 'Sorry ~ Please Shorten URL Again.'
-        return res.render('index', { url: exist.url, error })
-      } else {
-        URL.create({ url: link, random: random })
+  generatRandom()
+  function generatRandom() {
+    const random = randomLetter()
+    URL.findOne({ random: random })
+      .lean()
+      .then(exist => {
+        if (exist) {
+          return generatRandom()
+        }
+        return URL.create({ url: link, random: random })
           .then(() => {
             const url = `${req.headers.origin}/${random}`
             res.render('shorten', { url })
           })
           .catch(error => console.log(error))
-      }
-    })
-    .catch(error => console.log(error))
+      })
+      .catch(error => console.log(error))
+  }
 })
 
 app.get('/:random', (req, res) => {
