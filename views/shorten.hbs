@@ -2,9 +2,16 @@
   <div class="row justify-content-center">
     <div class="col-8 mt-3">
       <h1>Success!Please use this link:</h1>
-      <input id="copyUrl" class="form-control" value="{{ url }}" aria-label="url" aria-describedby="addon-wrapping"
+      <input id="url" class="form-control" value="{{ url }}" aria-label="url" aria-describedby="addon-wrapping"
         readonly>
-      <button id="copy" data-clipboard-target="#copyUrl" class="btn btn-primary mt-3">Copy</button>
+      <button id="copyButton" class="btn btn-primary mt-3" onclick="copyUrl()">Copy URL</button>
     </div>
   </div>
 </div>
+<script>
+  function copyUrl() {
+    document.querySelector('#url').select() //選取目標
+    document.execCommand("Copy"); // 執行瀏覽器複製命令
+    alert("已複製到剪貼簿");
+  }
+</script>

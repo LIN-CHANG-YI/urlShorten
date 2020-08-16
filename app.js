@@ -11,7 +11,7 @@ const PORT = process.env.PORT || 3000
 app.engine('hbs', exphbs({ defaultLayout: 'main', extname: '.hbs' }))
 app.set('view engine', 'hbs')
 app.use(bodyParser.urlencoded({ extended: true }))
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+mongoose.connect(MONGODB_URI, { useNewUrlParser: true, useUnifiedTopology: true, useCreateIndex: true })
 
 const db = mongoose.connection
 db.on('error', () => {
@@ -25,17 +25,18 @@ app.get('/', (req, res) => {
   res.render('index')
 })
 
-app.post('/url', (req, res) => {
+app.post('/getUrl', (req, res) => {
   const link = req.body.url
   const random = randomLetter()
-  URL.find({ random: `${random}` })
+  URL.findOne({ random: random })
     .lean()
-    .then(exist => {
-      //判斷是否有一樣組合的網址
-      if (exist.length === 1) {
-        res.redirect('/')
+    .then((exist) => {
+      //判斷是否有一樣亂數
+      if (exist) {
+        const error = 'Sorry ~ Please Shorten URL Again.'
+        return res.render('index', { url: exist.url, error })
       } else {
-        URL.create({ url: `${link}`, random: `${random}` })
+        URL.create({ url: link, random: random })
           .then(() => {
             const url = `${req.headers.origin}/${random}`
             res.render('shorten', { url })
@@ -48,7 +49,7 @@ app.post('/url', (req, res) => {
 
 app.get('/:random', (req, res) => {
   const params = req.params.random
-  URL.findOne({ random: `${params}` })
+  URL.findOne({ random: params })
     .then((item) => res.redirect(`${item.url}`))
     .catch(error => console.log(error))
 })
