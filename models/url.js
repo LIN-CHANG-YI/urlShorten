@@ -5,7 +5,8 @@ const urlSchema = new Schema({
   random: {
     type: String,
     unique: true
-  }
+  },
+  newUrl: String
 })
 
 module.exports = mongoose.model('URL', urlSchema)

@@ -7,3 +7,24 @@
     </form>
   </div>
 </div>
+
+<div class="container">
+  <div class="row justify-content-center mt-3">
+    <table class="table">
+      <thead class="thead-light">
+        <tr>
+          <th scope="col">原始網址</th>
+          <th scope="col">短網址</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#each totalurl}}
+        <tr>
+          <td><a href="{{this.url}}">{{this.url}}</a></td>
+          <td><a href="{{this.newUrl}}">{{this.newUrl}}</a></td>
+        </tr>
+        {{/each}}
+      </tbody>
+    </table>
+  </div>
+</div>

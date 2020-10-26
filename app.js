@@ -22,7 +22,12 @@ db.once('open', () => {
 })
 
 app.get('/', (req, res) => {
-  res.render('index')
+  URL.find()
+    .lean()
+    .limit(5)
+    .then((totalurl) => {
+      res.render('index', { totalurl })
+    })
 })
 
 app.post('/getUrl', (req, res) => {
@@ -36,12 +41,11 @@ app.post('/getUrl', (req, res) => {
         if (exist) {
           return generatRandom()
         }
-        return URL.create({ url: link, random: random })
-          .then(() => {
-            const url = `${req.headers.origin}/${random}`
-            res.render('shorten', { url })
-          })
-          .catch(error => console.log(error))
+        return URL.create({ url: link, random: random, newUrl: `${req.headers.origin}/${random}` })
+      })
+      .then(() => {
+        const url = `${req.headers.origin}/${random}`
+        res.render('shorten', { url })
       })
       .catch(error => console.log(error))
   }
