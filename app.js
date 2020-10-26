@@ -28,6 +28,7 @@ app.get('/', (req, res) => {
     .then((totalurl) => {
       res.render('index', { totalurl })
     })
+    .catch(error => res.send(String(error)))
 })
 
 app.post('/getUrl', (req, res) => {
@@ -47,7 +48,7 @@ app.post('/getUrl', (req, res) => {
         const url = `${req.headers.origin}/${random}`
         res.render('shorten', { url })
       })
-      .catch(error => console.log(error))
+      .catch(error => res.send(String(error)))
   }
 })
 
@@ -55,7 +56,7 @@ app.get('/:random', (req, res) => {
   const params = req.params.random
   URL.findOne({ random: params })
     .then((item) => res.redirect(`${item.url}`))
-    .catch(error => console.log(error))
+    .catch(error => res.send(String(error)))
 })
 
 app.listen(PORT, () => {
