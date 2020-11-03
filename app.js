@@ -25,6 +25,7 @@ app.get('/', (req, res) => {
   URL.find()
     .lean()
     .limit(5)
+    .sort({ _id: 'DESC' })
     .then((totalurl) => {
       res.render('index', { totalurl })
     })
