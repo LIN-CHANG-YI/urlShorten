@@ -26,9 +26,7 @@ app.get('/', (req, res) => {
     .lean()
     .limit(5)
     .sort({ _id: 'DESC' })
-    .then((totalurl) => {
-      res.render('index', { totalurl })
-    })
+    .then(totalurl => res.render('index', { totalurl }))
     .catch(error => res.send(String(error)))
 })
 
@@ -37,18 +35,15 @@ app.post('/getUrl', (req, res) => {
   generatRandom()
   function generatRandom() {
     const random = randomLetter()
-    URL.findOne({ random: random })
+    URL.findOne({ random })
       .lean()
       .then(exist => {
         if (exist) {
           return generatRandom()
         }
-        return URL.create({ url: link, random: random, newUrl: `${req.headers.origin}/${random}` })
+        return URL.create({ url: link, random, newUrl: `${req.headers.origin}/${random}` })
       })
-      .then(() => {
-        const url = `${req.headers.origin}/${random}`
-        res.render('shorten', { url })
-      })
+      .then((data) => res.render('shorten', { url: data.newUrl }))
       .catch(error => res.send(String(error)))
   }
 })
@@ -56,7 +51,7 @@ app.post('/getUrl', (req, res) => {
 app.get('/:random', (req, res) => {
   const params = req.params.random
   URL.findOne({ random: params })
-    .then((item) => res.redirect(`${item.url}`))
+    .then((data) => res.redirect(`${data.url}`))
     .catch(error => res.send(String(error)))
 })
 
